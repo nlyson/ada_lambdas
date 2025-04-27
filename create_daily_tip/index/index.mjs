@@ -1,10 +1,18 @@
 import { DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 
+function getTodayLocalDateString() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const client = new DynamoDBClient({ region: "us-east-1" });
 const DAILY_TIP_LAMBDA_URL = "https://mxxgmre43oe44ufw2n7ub7dxnm0tskjq.lambda-url.us-east-1.on.aws/chat_with_gpt";
 
 export async function handler(event) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getTodayLocalDateString();
 
   try {
     // Step 1: Check if today's tip already exists
